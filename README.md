@@ -9,10 +9,10 @@ project structure
 
 - backend
   - config
-    - database.php // database config
-    - routes.php  // route config
+    - database.php // ** database config
+    - routes.php  // ** route config
   - controllers
-    - UserController.php // boilerplate controller
+    - UserController.php // ** boilerplate controller
   - core
     - Controller.php
     - Database.php
@@ -20,10 +20,10 @@ project structure
     - Request.php
     - Route.php
   - models
-    - User.php // boilerplate model
+    - User.php // ** boilerplate model
   - views
-    - 404.php // 404 not found page
-    - home.php // boilerplate home view
+    - 404.php // ** 404 not found page
+    - home.php // ** boilerplate home view
 - public
   - css
     - bootstrap.min.css
@@ -31,6 +31,6 @@ project structure
   - js
     - bootstrap.min.js
     - jquery-3.2.1.min.js
-  - htaccess  // change htaccess to .htaccess
-  - index.php // initialize application
+  - htaccess  // ** change htaccess to .htaccess
+  - index.php // ** initialize application
   - robot.txt
