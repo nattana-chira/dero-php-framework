@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Nattana Jirachaithamrongsak">
+
+	<title>Dero - php framework</title>
+</head>
+
+<link rel="image_src" href="https://saramatao.github.io/Dero-php-framework/logo.png" />
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Custom styles for this template -->
+<link href="blog.css" rel="stylesheet">
+<link href="prism.css" rel="stylesheet">
+<script src="prism.js"></script>
+<body>
+
+	 <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav">
+          <a class="blog-nav-item active" href="#">Home</a>
+          <a class="blog-nav-item" href="https://github.com/Saramatao/Dero-php-framework" target="_blank">GitHub</a>
+          <a class="blog-nav-item" href="https://twitter.com/NattanaJirachai" target="_blank">Twitter</a>
+          <a class="blog-nav-item" href="https://web.facebook.com/knight.baberon" target="_blank">Facebook</a>
+        </nav>
+      </div>
+    </div>
+
+
+    <div class="container">
+
+      <div class="blog-header">
+        <h1 class="blog-title">Dero php framework</h1>
+        <p class="lead blog-description">
+        	Dero is a mini custom php framework with MVC structure for PHP to build basic restful api website
+        </p>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+
+          <div class="blog-post" id="dependencies">
+            <h2 class="blog-post-title">Framework's dependencies</h2>
+            <p class="blog-post-meta">January 9, 2017 by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a></p>
+            <ul>
+            	<li>
+            		bootstrap 3
+            	</li>
+            	<li>
+            		jquery 3.2.1
+            	</li>
+            </ul>
+          </div><!-- /.blog-post -->
+
+          <div class="blog-post" id="structure">
+            <h2 class="blog-post-title">Framework structure</h2>
+            <p class="blog-post-meta">January 9, 2017 by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a></p>
+						<pre>
+# backend
+  # config
+    - database.php // ** database config
+    - routes.php  // ** route config
+  # controllers
+    - UserController.php // ** boilerplate controller
+  # core
+    - Controller.php
+    - Database.php
+    - Model.php
+    - Request.php
+    - Route.php
+  # models
+    - User.php // ** boilerplate model
+  # views
+    - 404.php // ** 404 not found page
+    - home.php // ** boilerplate home view
+# public
+  # css
+    - bootstrap.min.css
+  # images
+  # js
+    - bootstrap.min.js
+    - jquery-3.2.1.min.js
+  - htaccess  // ** change htaccess to .htaccess
+  - index.php // ** initialize application
+  - robot.txt
+						</pre>
+          </div>
+
+          <div class="blog-post">
+            <h2 class="blog-post-title" id="route">Route</h2>
+            <p class="blog-post-meta">January 9, 2017 by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a></p>
+	         	<pre>
+# backend
+  # config
+    - routes.php  // ** route config
+						</pre>
+
+						<pre><code class="language-php">
+Route::get('/',                   'PageController', 'index');
+Route::get('/external',           'PageController', 'external');
+
+Route::get('/api/users',          'UserController', 'all');
+Route::get('/api/users/{id}',     'UserController', 'find');
+Route::post('/api/users',         'UserController', 'create');
+Route::put('/api/users/{id}',     'UserController', 'updateWithId');
+Route::delete('/api/users/{id}',  'UserController', 'delete');
+						</code></pre>
+
+						Routes in dero is very similar to Laravel Routes. <br>
+						You can define web route easily in backend/config/routes.php. <br>
+						You can set request type for the incoming request (get, post, put, delete). <br>
+						Route class can takes up to 3 parameters. 
+							<ul>
+								<li>1. URL request (parameter is optional).</li>
+								<li>2. Which Controller that handle request.</li>
+								<li>3. Which Controller method should call.</li>
+								<li># you can define a url parameter by putting it inside curry braces {}.</li>
+							</ul>
+          </div><!-- /.blog-post -->
+
+          <div class="blog-post">
+            <h2 class="blog-post-title" id="controller">Controller</h2>
+            <p class="blog-post-meta">January 9, 2017 by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a></p>
+<pre>
+# backend
+  # controllers
+    - myFirstController.php  // ** sample controller
+					</pre>
+
+						<pre><code class="language-php">
+class myFirstController extends Controller 
+{
+  // Normal request
+  public function renderIndex() 
+  {
+  	// Render view in directory /views
+    return $this->render('index.php');
+  }
+
+  // Request with body content
+  public function createUser(Request $request) 
+  {
+  	// How to get request body
+  	$name = $request->name;
+  	$age = $request->age;
+
+    // Create user logic
+    // ......
+
+    return $this->render('users.php');
+  }
+
+  // Fetch API with url params 
+  public function delete($id) 
+  {
+  	// Fetch user logic
+    // ......
+
+    // Return data as JSON format
+    return $this->json($data);
+  }
+}
+						</code></pre>
+          </div>
+
+          <div class="blog-post">
+            <h2 class="blog-post-title" id="view">View</h2>
+            <p class="blog-post-meta">January 9, 2017 by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a></p>
+            <pre>
+# backend
+  # views
+    - index.php  // ** sample view
+						</pre>
+						<pre><code class="language-php">
+public function renderIndex() 
+{
+	// Defines any variable you want
+	$title = 'hello world!'
+
+	// Render view in directory /views
+  return $this->render('index.php');
+}
+						</code></pre>
+						<pre><code class="language-html">
+/index.php
+&lt;div&gt;
+	&lt;h2&gt;&lt;?php echo $title; ?&gt;&lt;/h2&gt;
+&lt;/div&gt;
+						</code></pre>
+						You can define any variable you want in the method then call it in html page anytimes!.
+          </div>
+
+          <div class="blog-post">
+            <h2 class="blog-post-title" id="model">Model</h2>
+            <p class="blog-post-meta">January 9, 2017 by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a></p>
+            <pre>
+# backend
+  # models
+    - User.php  // ** sample model
+						</pre>
+						<pre><code class="language-php">
+class User extends Model
+{
+  // Define your table name
+  public $table = 'users';
+
+  // Define your primary key of the table *note K in $primaryKey is upper case
+  public $primaryKey = 'id';
+}
+						</code></pre>
+						Now your model is set. <br>
+						To use it in controller you need to require it on the top of controller class. <br>
+						<pre><code class="language-php">
+// Include user model
+require_once (__DIR__ .'/../models/User.php');
+
+class myFirstController extends Controller 
+{
+  // Sample request with body content and url param
+  public function renderIndex(Request $request, $id) 
+  {
+  	// Fetch all users
+  	$users = new User();
+    $users->all();
+
+    // Fetch user with primary key
+    $users = new User();
+    $users->find($id);
+
+    // Create user with request body
+    $users = new User();
+    $users->save($request);
+
+    // Update user with request body and primary key (optional)  
+    $users = new User();
+    $users->update($request, $id);
+
+    // Delete user with primary key
+    $users = new User();
+    $users->delete($id);
+
+    // Fetch one user with where condition
+    $users = new User();
+    $users->where('id', '=', $id)->first();
+
+    // Fetch multiple users with where condition
+    $users = new User();
+    $users->where('id', '=', $id)->get();
+
+    // All the result data return as object/array then saved in data property
+    return $this->json($users->data);
+  }
+						</code></pre>
+						Model methods
+						<ul>
+							<li>all();</li>
+							<li>find($primaryKey);</li>
+							<li>save($request);</li>
+							<li>update($request); *request body must contains primary key</li>
+							<li>update($request, $primaryKey);</li>
+							<li>delete($primaryKey);</li>
+							<li>where($fieldName, $operator, $compareValue)->first();</li>
+							<li>where($fieldName, $operator, $compareValue)->get();</li>
+						</ul>
+          </div>
+
+					<div class="blog-post">
+            <h2 class="blog-post-title" id="database">Database Connection</h2>
+            <p class="blog-post-meta">January 9, 2017 by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a></p>
+            <pre>
+# backend
+  # config
+    - database.php  // ** database config
+						</pre>
+						<pre><code class="language-php">
+class DbConfig
+{
+	// Your host domain 
+  public static $host_url       = "localhost";
+
+  // Database name
+  public static $database_name  = "angjs";
+
+  // Database user login
+  public static $database_user  = "root";
+
+  // Database password login
+  public static $password       = "1234";
+}
+						</code></pre>
+						You need to config these setting first before you can connect models to database.
+					</div>
+
+          <nav>
+            <ul class="pager" style="text-align: center">
+              <li><a href="#">Back to top</a></li>
+            </ul>
+          </nav>
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+          	<img src="logo.png" style="width: 100%" alt="Dero-php-framework">
+            <h4 style="margin-top: 25px;">About</h4>
+            <p>
+            	Dero is a mini custom php framework with MVC structure for PHP to build basic restful api websit.
+            	created by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a> <br>
+            	<ul>
+	              <li><a href="https://github.com/Saramatao/Dero-php-framework" target="_blank">GitHub</a></li>
+	              <li><a href="https://twitter.com/NattanaJirachai" target="_blank">Twitter</a></li>
+	              <li><a href="https://web.facebook.com/knight.baberon" target="_blank">Facebook</a></li>
+            	</ul>
+            </p>
+          </div>
+          <div class="sidebar-module">
+            <h4>Navigator</h4>
+            <ol class="list-unstyled">
+              <li><a href="#dependencies">Dependencies</a></li>
+              <li><a href="#structure">Structure</a></li>
+              <li><a href="#route">Route</a></li>
+              <li><a href="#controller">Controller</a></li>
+              <li><a href="#view">View</a></li>
+              <li><a href="#model">Model</a></li>
+              <li><a href="#database">Database Connection</a></li>
+            </ol>
+          </div>
+          <div class="sidebar-module">
+            <h4>Contacts</h4>
+            <ol class="list-unstyled">
+              <li><a href="https://github.com/Saramatao/Dero-php-framework" target="_blank">GitHub</a></li>
+              <li><a href="https://twitter.com/NattanaJirachai" target="_blank">Twitter</a></li>
+              <li><a href="https://web.facebook.com/knight.baberon" target="_blank">Facebook</a></li>
+            </ol>
+          </div>
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <footer class="blog-footer">
+    	<p>Special thanks to</p>
+      <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+      <p>Vector illistration's logo<a href="https://www.vecteezy.com/">Vector illustration credit: www.vecteezy.com</a></p>
+      <p>
+        <a href="#">Back to top</a>
+      </p>
+    </footer>
+
+</body>
+</html>
