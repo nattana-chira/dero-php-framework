@@ -1,1 +1,1 @@
-alert('test A');
+alert('test B');
