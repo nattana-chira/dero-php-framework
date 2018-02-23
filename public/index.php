@@ -10,5 +10,6 @@
 |
 */
 
-require_once (__DIR__ .'/../backend/config/routes.php');
+require_once (__DIR__.'/../application/vendor/autoload.php');
+require_once (__DIR__ .'/../application/config/routes.php');
 
