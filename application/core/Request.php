@@ -138,6 +138,7 @@ class Request
 
   public function hasFile($name)
   {
-    return file_exists($_FILES[$name]['tmp_name']);
+    // return isset($_FILES[$name]);
+    return file_exists($_FILES[$name]['tmp_name']) || is_uploaded_file($_FILES[$name]['tmp_name']);
   }
 }

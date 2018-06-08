@@ -26,7 +26,8 @@ class Validator
   | 
   */
 
-	private $errorBag = [];
+  private $errorBag = [];
+  public $messageBag = [];
 
 	/*
   |--------------------------------------------------------------------------
@@ -37,43 +38,44 @@ class Validator
   | 
   */
 
-	public function make($request, $rules, $messages = null)
-	{
-		$validator = new Validator();
+  public function make($request, $rules, $messages = null)
+  {
+  	$validator = new Validator();
+  	$validator->messageBag = $messages;
 
-		foreach ($rules as $name => $rule) {
-			$explodedRules[$name] = explode('|', $rule);
-		}
+  	foreach ($rules as $name => $rule) {
+  		$explodedRules[$name] = explode('|', $rule);
+  	}
 
-		foreach ($request as $key => $value) {
-			$value = trim($value);
-			if ( array_key_exists($key, $explodedRules)) {
-				foreach ($explodedRules[$key] as $index => $ruleSet) {
-					if ( strpos($ruleSet, ':') !== false) {
-						$explodedCond = explode(':', $ruleSet);
-						$condName = $explodedCond[0];
-						$condValue = $explodedCond[1];
-					} else {
-						$condName = $ruleSet;
-						$condValue = null;
-					}
+  	foreach ($request as $key => $value) {
+  		$value = trim($value);
+  		if ( array_key_exists($key, $explodedRules)) {
+  			foreach ($explodedRules[$key] as $index => $ruleSet) {
+  				if ( strpos($ruleSet, ':') !== false) {
+  					$explodedCond = explode(':', $ruleSet);
+  					$condName = $explodedCond[0];
+  					$condValue = $explodedCond[1];
+  				} else {
+  					$condName = $ruleSet;
+  					$condValue = null;
+  				}
 
-					$validator->$condName($key, $value, $condName, $condValue);
-				}
-			}
-		}
+  				$validator->$condName($key, $value, $condName, $condValue);
+  			}
+  		}
+  	}
 
-		if ($validator->fails()){
-			$dummyArr = [];
-			foreach ($validator->errors() as $key => $value) {
-				$dummyArr[$key] = $value;
-			}
+  	if ($validator->fails()){
+  		$dummyArr = [];
+  		foreach ($validator->errors() as $key => $value) {
+  			$dummyArr[$key] = $value;
+  		}
 
-			Session::flash('errors', $dummyArr);
-		}
+  		Session::flash('errors', $dummyArr);
+  	}
 
-		return $validator;
-	}
+  	return $validator;
+  }
 
 	/*
   |--------------------------------------------------------------------------
@@ -85,15 +87,15 @@ class Validator
   |
   */
 
-	public function fails()
-	{
-		return ( count($this->errorBag) > 0);
-	}
+  public function fails()
+  {
+  	return ( count($this->errorBag) > 0);
+  }
 
-	public function passes()
-	{
-		return (! count($this->errorBag) > 0);
-	}
+  public function passes()
+  {
+  	return (! count($this->errorBag) > 0);
+  }
 
 	/*
   |--------------------------------------------------------------------------
@@ -105,10 +107,10 @@ class Validator
   | 
   */
 
-	public function errors()
-	{
-		return $this->errorBag;
-	}
+  public function errors()
+  {
+  	return $this->errorBag;
+  }
 
 	/*
   |--------------------------------------------------------------------------
@@ -119,15 +121,19 @@ class Validator
   | 
   */
 
-	private function min($key, $value, $condName, $condValue)
-	{
-		if ($condValue > mb_strlen($value)) {
-			if (! isset($this->errorBag[$key]))
-				$this->errorBag[$key] = [];
+  private function min($key, $value, $condName, $condValue)
+  {
+  	if ($condValue > mb_strlen($value)) {
+  		if (! isset($this->errorBag[$key]))
+  			$this->errorBag[$key] = [];
 
-			$this->errorBag[$key][$condName] = "min error";
-		}
-	}
+  		if (isset($this->messageBag[$key]) && ($this->messageBag[$key][$condName])) {
+  			$this->errorBag[$key][$condName] = $this->messageBag[$key][$condName];
+  		} else {
+  			$this->errorBag[$key][$condName] = "$key must contains more than $condValue characters";
+  		}
+  	}
+  }
 
 	/*
   |--------------------------------------------------------------------------
@@ -138,15 +144,19 @@ class Validator
   | 
   */
 
-	private function max($key, $value, $condName, $condValue)
-	{
-		if ($condValue < mb_strlen($value)) {
-			if (! isset($this->errorBag[$key]))
-				$this->errorBag[$key] = [];
+  private function max($key, $value, $condName, $condValue)
+  {
+  	if ($condValue < mb_strlen($value)) {
+  		if (! isset($this->errorBag[$key]))
+  			$this->errorBag[$key] = [];
 
-			$this->errorBag[$key][$condName] = "max error";
-		}
-	}
+  		if (isset($this->messageBag[$key]) && ($this->messageBag[$key][$condName])) {
+  			$this->errorBag[$key][$condName] = $this->messageBag[$key][$condName];
+  		} else {
+  			$this->errorBag[$key][$condName] = "$key must contains less than $condValue characters";
+  		}
+  	}
+  }
 
 	/*
   |--------------------------------------------------------------------------
@@ -157,13 +167,17 @@ class Validator
   | 
   */
 
-	private function required($key, $value, $condName, $condValue)
-	{
-		if (mb_strlen($value) === 0) {
-			if (! isset($this->errorBag[$key]))
-				$this->errorBag[$key] = [];
+  private function required($key, $value, $condName, $condValue)
+  {
+  	if (mb_strlen($value) === 0) {
+  		if (! isset($this->errorBag[$key]))
+  			$this->errorBag[$key] = [];
 
-			$this->errorBag[$key][$condName] = "required error";
-		}
-	}
+  		if (isset($this->messageBag[$key]) && ($this->messageBag[$key][$condName])) {
+  			$this->errorBag[$key][$condName] = $this->messageBag[$key][$condName];
+  		} else {
+  			$this->errorBag[$key][$condName] = "$key is required";
+  		}
+  	}
+  }
 }

@@ -193,4 +193,19 @@ class Route
     return $customPath;
   }
 
+  /*
+  |--------------------------------------------------------------------------
+  | customPath @params (string) $customPath
+  |--------------------------------------------------------------------------
+  |
+  */
+
+  public static function notFound($_notFound)
+  {
+    $controller = new Controller();
+    require_once (__DIR__ . '/global/Session.php');
+    require_once ($_notFound);
+
+    $this->_session->destroyFlash();  
+  }
 }

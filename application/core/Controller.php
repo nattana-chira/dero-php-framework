@@ -86,8 +86,8 @@ class Controller
     unset($_dumpArray_);
     unset($_filename_); 
     
-    require_once (__DIR__.'/global/Session.php');
-    require_once (__DIR__ .'/../app/'.  $_customPath_);
+    require_once (__DIR__ . '/global/Session.php');
+    require_once (__DIR__ . '/../app/'.  $_customPath_);
 
     $this->_session->destroyFlash();  
   }

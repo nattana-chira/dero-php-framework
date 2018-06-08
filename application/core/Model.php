@@ -37,6 +37,7 @@ class Model
   | 
   */
 
+  private $_mainData = null;
   private $_data;
   private static $_uniqueValue = 0;
   private $_table;
@@ -56,6 +57,7 @@ class Model
     'action' => 'select'
   );
   private $_reservedWords = array(
+    '_mainData',
     '_data',
     '_uniqueValue',
     '_table',
@@ -407,8 +409,13 @@ class Model
   public function get()
   {
     if ( count($this->_queryBuilder['with']) > 0) {
-      $methodName = $this->_queryBuilder['with'][0];
-      $this->$methodName();
+      foreach ($this->_queryBuilder['with'] as $key => $methodName) {
+        // $methodName = $this->_queryBuilder['with'][0];
+        $this->$methodName();
+
+      }
+      // $methodName = $this->_queryBuilder['with'][0];
+      // $this->$methodName();
     } 
     else {
       $sql = $this->queryBuilder();
@@ -764,6 +771,11 @@ class Model
 	  	$subData = array();	
 	  }
 
+    if ($this->_mainData === null)
+      $this->_mainData = $mainData;
+
+    $mainData = $this->_mainData;
+
     return array('main' => $mainData, 'sub' => $subData);
   }
 
@@ -804,6 +816,11 @@ class Model
 	  	$mainData = array();
 	  	$subData = array();	
 	  }
+
+    if ($this->_mainData === null)
+      $this->_mainData = $mainData;
+
+    $mainData = $this->_mainData;
 
     return array('main' => $mainData, 'sub' => $subData);
   }
