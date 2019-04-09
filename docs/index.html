@@ -143,6 +143,9 @@ Route::delete('/api/users/{id}',  'UserController', 'delete');
 					</pre>
 
 						<pre><code class="language-php">
+use Core\Controller;
+use Core\Request;
+
 class myFirstController extends Controller 
 {
   // Normal request
@@ -193,7 +196,9 @@ public function renderIndex()
 	$title = 'hello world!'
 
 	// Render view in directory /views
-  return $this->render('index.php');
+  return $this->render('index.php', [
+    'title' => $title // pass variable to view
+  ]);
 }
 						</code></pre>
 						<pre><code class="language-html">
@@ -214,6 +219,8 @@ public function renderIndex()
     - User.php  // ** sample model
 						</pre>
 						<pre><code class="language-php">
+use App\Models\UserAddress;
+
 class User extends Model
 {
   // Define your table name
@@ -221,13 +228,23 @@ class User extends Model
 
   // Define your primary key of the table *note K in $primaryKey is upper case
   public $primaryKey = 'id';
+
+  // Define your relation (can use eagle loading with ->with($relation) model method)
+  protected function modelphoto()
+  {
+    return $this->hasMany(new UserAddress, 'user_id');
+  }
 }
 						</code></pre>
 						Now your model is set. <br>
 						To use it in controller you need to require it on the top of controller class. <br>
 						<pre><code class="language-php">
+use Core\Controller;
+use Core\Request;
+
 // Include user model
-require_once (__DIR__ .'/../models/User.php');
+
+use App\Models\Advertise;
 
 class myFirstController extends Controller 
 {
@@ -276,6 +293,8 @@ class myFirstController extends Controller
 							<li>delete($primaryKey);</li>
 							<li>where($fieldName, $operator, $compareValue)->first();</li>
 							<li>where($fieldName, $operator, $compareValue)->get();</li>
+              <li>with($relations);</li>
+              <li>orderBy($field)->get();</li>
 						</ul>
           </div>
 
@@ -306,6 +325,133 @@ class DbConfig
 						You need to config these setting first before you can connect models to database.
 					</div>
 
+          <div class="blog-post">
+            <h2 class="blog-post-title" id="database">Use Session for Authentication</h2>
+            <p class="blog-post-meta">January 9, 2017 by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a></p>
+            <pre><code class="language-php">
+use Core\Controller;
+
+class AuthController extends Controller 
+{
+
+  /*
+  ***************************************************************************
+  * admin auth
+  ***************************************************************************
+  */
+
+  public function __construct()
+  {
+    parent::__construct();
+    
+    // check if no 'auth' in session or 'auth' session is not equal to 'admin'
+    if (!$this->session()->has('auth') || $this->session()->get('auth') !== 'admin'))
+      return $this->redirect('/admin/login'); // redirect to url '/admin/login'
+  }
+}
+            </code></pre>
+            Session methods
+            <ul>
+              <li>all()</li>
+              <li>get($key)</li>
+              <li>put($key, $value)</li>
+              <li>push($key, $value)</li>
+              <li>pull($key)</li>
+              <li>has($key)</li>
+              <li>exists($key)</li>
+              <li>forget($key)</li>
+              <li>flush()</li>
+              <li>flash($key, $value)</li>
+              <li>destroyFlash()</li>
+            </ul>
+          </div>
+
+          <div class="blog-post">
+          <h2 class="blog-post-title" id="database">Uplaod Image With Request</h2>
+          <p class="blog-post-meta">January 9, 2017 by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a></p>
+          <pre><code class="language-php">
+use Core\Controller;
+use Core\Request;
+use Core\File; // include File helper
+
+class AuthController extends Controller 
+{
+
+  /*
+  ***************************************************************************
+  * saveImage
+  ***************************************************************************
+  */
+
+  public function saveImage(Request $request)
+  {
+    $destinationFolder = 'uploads/';
+
+    // store file to destination folder
+    $path = $request->file('photo')->store($destinationFolder);
+
+    // store file with new name
+    $path = $request->file('photo')->storeAs($destinationFolder, 'newFileName');
+
+    $thumbnailPaths = [
+      "img/img_thumbnail/" => $thumbnail_width = 300
+    ];
+
+    // store thumbnails of uploaded file
+    $paths = $request->file('photo')->storeWithThumb($destinationFolder, $thumbnailPaths, $saveOriginalImage = false);
+  }
+
+  public function moveFile()
+  {
+    // use File helper to move file
+    File::move($old_path, $new_path);
+  }
+
+  public function deleteFile()
+  {
+    // use File helper to remove file
+    File::delete($path);
+  }
+}
+            </code></pre>
+          </div>
+
+          <div class="blog-post">
+          <h2 class="blog-post-title" id="database">Validation</h2>
+          <p class="blog-post-meta">January 9, 2017 by <a href="https://web.facebook.com/knight.baberon" target="_blank">Nattana Jirachaithamrongsak</a></p>
+          <pre><code class="language-php">
+use Core\Controller;
+use Core\Request;
+use Core\Validator; // include Validator helper class
+
+class ValidationController extends Controller 
+{
+
+  /*
+  ***************************************************************************
+  * validateRequest
+  ***************************************************************************
+  */
+
+  public function saveImage(Request $request)
+  {
+    $validator = Validator::make($request->all(), [
+      'id' => 'required|max:255',
+      'title' => 'required|max:50',
+      'detail' => 'required'
+    ]);
+
+    if ($validator->passes()) {
+      // logic for pass
+    }
+
+    if ($validator->fails()) {
+      // logic for fail
+    }
+  }
+}
+            </code></pre>
+          </div>
           <nav>
             <ul class="pager" style="text-align: center">
               <li><a href="#">Back to top</a></li>
@@ -338,6 +484,9 @@ class DbConfig
               <li><a href="#view">View</a></li>
               <li><a href="#model">Model</a></li>
               <li><a href="#database">Database Connection</a></li>
+              <li><a href="#database">Use Session for Authentication</a></li>
+              <li><a href="#database">Uplaod Image With Request</a></li>
+              <li><a href="#database">Validation</a></li>
             </ol>
           </div>
           <div class="sidebar-module">
